@@ -1,6 +1,15 @@
 # Multiclass_regression
 
-CAR car acceptability . PRICE overall price . . buying buying price . . maint price of the maintenance . TECH technical characteristics . . COMFORT comfort . . . doors number of doors . . . persons capacity in terms of persons to carry . . . lug_boot the size of luggage boot . . safety estimated safety of the car
+CAR car acceptability
+. PRICE overall price
+. . buying buying price
+. . maint price of the maintenance
+. TECH technical characteristics
+. . COMFORT comfort
+. . . doors number of doors
+. . . persons capacity in terms of persons to carry
+. . . lug_boot the size of luggage boot
+. . safety estimated safety of the car
 
 Attribute Information:
 
