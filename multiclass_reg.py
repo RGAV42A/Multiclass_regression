@@ -51,12 +51,38 @@ for ix in range(0,len(rfactors)-1):
         new_name=str(rfactors[ix]+'_'+rfactors[iy])
         df[new_name]=df[rfactors[ix]]*df[rfactors[iy]]
 
+rlist =['maint', 'doors', 'persons', 'lug_boot', 'safety','acceptability', 'maint_persons', 'maint_safety','maint_acceptability', 'persons_lug_boot', 'persons_safety','persons_acceptability', 'lug_boot_safety', 'safety_acceptability']
+Y=df['buying']
+X=df[rfactors]
 
-#Y=df['buying']
-#X=df[rfactors]
+#Y=df.iloc[:,0]
+#X=df.iloc[:,1:22]
 
-Y=df.iloc[:,0]
-X=df.iloc[:,1:22]
+#### FIT MODEL WITH POISSON
+cols = rlist
+pmax = 1
+while (len(cols)>0):
+    p= []
+    X = df[cols]
+    poisson_mod = sm.Poisson(Y,X).fit(method="newton")
+    p = pd.Series(poisson_mod.pvalues.values,index = cols)
+
+    pmax = max(p)
+    feature_with_p_max = p.idxmax()
+    if(pmax>0.05):
+        cols.remove(feature_with_p_max)
+    else:
+        break
+selected_features_BE = cols
+print(selected_features_BE)
+print(poisson_mod.summary())
+
+
+mlr = LogisticRegression(penalty='l2', C=1, random_state=30,solver='newton-cg',multi_class='multinomial')
+mlrm = mlr.fit(X,Y)
+# generate evaluation metrics
+print("Accuracy :", metrics.accuracy_score(Y, mlrm.predict(X)))
+
 
 ## FIT MODEL
 #lr=sm.MNLogit(Y,X).fit()
@@ -128,7 +154,7 @@ for n in range(len(nof_list)):
 print("Optimum number of features: %d" %nof)
 print("Score with %d features: %f" % (nof, r_sq))
 print(selected_features_rfe)
-'''
+
 #############
 ## plot resuals
 rlist =['maint', 'doors', 'persons', 'lug_boot', 'safety','acceptability', 'maint_persons', 'maint_safety','maint_acceptability', 'persons_lug_boot', 'persons_safety','persons_acceptability', 'lug_boot_safety', 'safety_acceptability']
@@ -163,5 +189,5 @@ fig, ax = plt.subplots()
 ax.hist(resid, bins=7)
 ax.set_title('Histogram of residuals')
 fig.savefig('Histogram.png',dpi=125)
-
+'''
 print('~~~~~~~')
