@@ -1,7 +1,7 @@
 import subprocess
 
-#out = subprocess.run(['/bin/bash', '-c','dir'],shell=True)
-#print(out)
+out = subprocess.run(['/bin/bash', '-c','dir'],shell=True)
+print(out)
 
 
 import pandas as pd
@@ -14,6 +14,16 @@ from sklearn.feature_selection import f_classif
 from sklearn.tree import DecisionTreeClassifier
 from matplotlib import pyplot
 from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import BaggingClassifier
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import ExtraTreesClassifier
+import warnings
+
+warnings.simplefilter('ignore')
+
 
 ##### READ DATA
 col_names=['buying','maint','doors','persons','lug_boot','safety','acceptability']
@@ -48,21 +58,37 @@ X = encoder.fit_transform(X)
 y_encoder = LabelEncoder()
 y = y_encoder.fit_transform(y)
 
-print('X.shape',X.shape)
 # feature selection
 def select_features(X, y):
     fs = SelectKBest(score_func=f_classif, k=17)
     fs.fit(X, y)
     X = fs.transform(X)
     return X
+X = select_features(X,y)
+print('select_features: Done')
 
-# define the evaluation method
-X = select_features(X, y)
-print('X.shape',X.shape)
-cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=1)
-model = DecisionTreeClassifier()
-cv_results = cross_val_score(model, X, y, cv=cv, scoring='accuracy')
-msg = "%s: %f (%f)" % ('CART', cv_results.mean(), cv_results.std())
-print(msg)
+# ensembles
+ensembles = []
+ensembles.append(('AB', AdaBoostClassifier()))
+ensembles.append(('GBM', GradientBoostingClassifier()))
+ensembles.append(('RF', RandomForestClassifier(n_estimators=10)))
+ensembles.append(('ET', ExtraTreesClassifier(n_estimators=10)))
+results = []
+names = []
+for name, model in ensembles:
+    cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=1)
+    cv_results = cross_val_score(model, X, y, cv=cv, scoring='accuracy')
+    results.append(cv_results)
+    names.append(name)
+    msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
+    print(msg)
 
-# CART: 0.964903 (0.012377)
+# Compare Algorithms
+fig = pyplot.figure()
+fig.suptitle('Ensemble Algorithm Comparison')
+ax = fig.add_subplot(111)
+pyplot.boxplot(results)
+ax.set_xticklabels(names)
+pyplot.savefig('ensemble_methods.png',dpi=80)
+
+
