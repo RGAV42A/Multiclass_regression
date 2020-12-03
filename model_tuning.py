@@ -66,7 +66,7 @@ X = select_features(X,y)
 print('select_features: Done')
 # define the evaluation method
 clf_DT_Bag = BaggingClassifier()
-cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=1)
+cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=200)
 # specify parameters and distributions to sample from
 param_dist = {'n_estimators':sp_randint(10,200),'bootstrap':['True','False'],'oob_score':['True','False']}
 # run randomized search
