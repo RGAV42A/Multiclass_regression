@@ -1,5 +1,9 @@
 # Multiclass_regression
 
+
+Car Evaluation Data Set from https://www.kaggle.com/elikplim/car-evaluation-data-set was analyzed
+
+
 CAR car acceptability
 . PRICE overall price
 . . buying buying price
