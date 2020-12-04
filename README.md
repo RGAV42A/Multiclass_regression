@@ -1,26 +1,4 @@
 # Multiclass_regression
 
-
-Car Evaluation Data Set from https://www.kaggle.com/elikplim/car-evaluation-data-set was analyzed
-
-
-CAR car acceptability
-. PRICE overall price
-. . buying buying price
-. . maint price of the maintenance
-. TECH technical characteristics
-. . COMFORT comfort
-. . . doors number of doors
-. . . persons capacity in terms of persons to carry
-. . . lug_boot the size of luggage boot
-. . safety estimated safety of the car
-
-Attribute Information:
-
-Class Values:
-
-unacc, acc, good, vgood
-
-Attributes:
-
-buying: vhigh, high, med, low. maint: vhigh, high, med, low. doors: 2, 3, 4, 5more. persons: 2, 4, more. lug_boot: small, med, big. safety: low, med, high.
+Car Evaluation Data Set (https://www.kaggle.com/elikplim/car-evaluation-data-set) was analyzed. All factors and the target are categorical. 
+There are 3 steps of the analysis 1) extract, transform, load (ETL), feature selection, and model selection in ETL_feature_selection_model_selection.py.  The data are loaded and cleaned. Then The factors are transformed with OneHotEncoder, and the target with LabelEncoder. The feature selection was performed with SelectKBest. The performance of score functions  f_classif and mutual_info_classif were compared. The performance of 6 models was compared LogisticRegression, LinearDiscriminantAnalysis, KNeighborsClassifier, DecisionTreeClassifier, GaussianNB, and SVC. 
